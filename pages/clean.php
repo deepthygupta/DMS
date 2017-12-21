@@ -1,5 +1,4 @@
 <?php
-
 session_start();
 require 'connect.php';
 $query1 = "DELETE FROM `employees_list` WHERE user_type != 'admin'";
