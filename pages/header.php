@@ -287,7 +287,7 @@ $user_details = getUserProfileInfo($login_user);
              <?php } if ($user_type == 'admin') {  ?>
             <li>
                 <a href="leave_requests.php">
-                    <i class="fa fa-laptop"></i> <span>Leave Details</span>            
+                    <i class="fa fa-laptop"></i> <span>Leave Requests</span>            
                 </a>
             </li>   
             <?php } if ($user_type == 'admin') {  ?>
@@ -298,7 +298,7 @@ $user_details = getUserProfileInfo($login_user);
                 </a>
             </li>
             <?php } ?>
-            <li>
+         <!--   <li>
                 <a href="widgets.html">
                     <i class="fa fa-th"></i> <span>Widgets</span>
                     <span class="pull-right-container">
@@ -393,7 +393,7 @@ $user_details = getUserProfileInfo($login_user);
                     <li><a href="examples/invoice.html"><i class="fa fa-circle-o"></i> Invoice</a></li>
                     <li><a href="examples/profile.html"><i class="fa fa-circle-o"></i> Profile</a></li>  
                 </ul>
-            </li>            
+            </li>   -->         
         </ul>
     </section>
     <!-- /.sidebar -->

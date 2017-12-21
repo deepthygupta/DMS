@@ -10,7 +10,6 @@ require_once 'connect.php';
 $error_msg = "";
 $success_message = "";
 
-
 $notifications = getAllNotifications();
 $count = count($notifications);
 
@@ -25,9 +24,11 @@ if (isset($_POST['submit'])) {
 if (isset($_POST['not_id'])) {
     $delete = deleteNotification($_POST['not_id']);
     if ($delete) {
-        return 1;
+        echo 1;
+        return;
     } else {
-        return 0;
+        echo 0;
+        return;
     }
 }
 ?>
@@ -38,23 +39,14 @@ if (isset($_POST['not_id'])) {
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Qpro | Notifications</title>
-
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-
         <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css">
-
         <link rel="stylesheet" href="../bower_components/font-awesome/css/font-awesome.min.css">
-
         <link rel="stylesheet" href="../bower_components/Ionicons/css/ionicons.min.css">
-
         <link rel="stylesheet" href="../dist/css/AdminLTE.min.css">
-
         <link rel="stylesheet" href="../dist/css/skins/_all-skins.min.css">
-
         <link rel="stylesheet" href="../bower_components/bootstrap-daterangepicker/daterangepicker.css">
-
         <link rel="stylesheet" href="../bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
-
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
     </head>
     <body class="hold-transition skin-blue sidebar-mini">
@@ -71,8 +63,6 @@ if (isset($_POST['not_id'])) {
                         <li class="active">Notifications</li>
                     </ol>
                 </section>
-
-                <!-- Main content -->
                 <section class="content">
                     <div class="row">
 
@@ -108,7 +98,6 @@ if (isset($_POST['not_id'])) {
                         </div>
                     </div>
                 </section>
-
                 <section class="content">
                     <div class="row">
                         <div class="col-xs-12">
@@ -132,7 +121,6 @@ if (isset($_POST['not_id'])) {
                                                     <td><?php echo $notifications[$i]['status']; ?></td>
                                                     <td><?php echo $notifications[$i]['added_date']; ?></td>
                                                     <td><button type="button" class="btn btn-danger" onclick="deleteNotification(<?php echo $notifications[$i]['id']; ?>)">Delete</button></td>
-
                                                 </tr>
                                             <?php } ?>
                                         </tbody>      
@@ -144,37 +132,27 @@ if (isset($_POST['not_id'])) {
                 </section>
             </div>           
         </div>
-
         <script src="../bower_components/jquery/dist/jquery.min.js"></script>
-
         <script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-
         <script src="../bower_components/fastclick/lib/fastclick.js"></script>
-
         <script src="../dist/js/adminlte.min.js"></script>
-
         <script src="../dist/js/demo.js"></script>
-
-        <script src="../bower_components/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js"></script>       
-
+        <script src="../bower_components/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js"></script>   
         <script src="../bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
-
         <script>
-
-                                                    function deleteNotification(value) {
-                                                        if (value) {
-                                                            $.ajax({
-                                                                url: 'notifications.php',
-                                                                cache: false,
-                                                                data: 'not_id=' + value,
-                                                                type: 'POST',
-                                                                success: function (response) {
-                                                                    alert(response);
-                                                                }
-                                                            });
-                                                        }
-                                                    }
-
+            function deleteNotification(value) {
+                if (value) {
+                    $.ajax({
+                        url: 'notifications.php',
+                        cache: false,
+                        data: 'not_id=' + value,
+                        type: 'POST',
+                        success: function (response) {
+                            window.location.href = "notifications.php";
+                        }
+                    });
+                }
+            }
         </script>
     </body>
 </html>

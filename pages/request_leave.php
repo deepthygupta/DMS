@@ -147,7 +147,7 @@ $leave_count = count($leave_details);
                 
                 <section class="content-header">
                     <h1>
-                        Requested Leave Details
+                        Leave History
                     </h1>                    
                 </section>
 

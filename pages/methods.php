@@ -206,13 +206,48 @@ function getLeaveRequestDetails($emp_id = '') {
     if ($emp_id) {
         $query = "SELECT * FROM leave_requests where emp_id = '" . $emp_id . "'";
     } else {
-        $query = "SELECT * FROM leave_requests";
+        $query = "SELECT * FROM leave_requests where status = 'pending'";
     }
     $result = mysqli_query($GLOBALS['conn'], $query);
     if ($result->num_rows) {
         while ($row = mysqli_fetch_assoc($result)) {
 
             $details[$i]['emp_id'] = $row['emp_id'];
+            $details[$i]['id'] = $row['id'];
+            $profile_info = getUsernamefromID($row['emp_id']);
+            $details[$i]['full_name'] = $profile_info['full_name'];
+            $details[$i]['username'] = $profile_info['username'];
+            $details[$i]['reason'] = $row['reason'];
+            $details[$i]['category'] = $row['leave_category'];
+            $details[$i]['leave_date'] = $row['leave_from'] . "(" . $row['from_type'] . ") to " . $row['leave_to'] . "(" . $row['to_type'] . ")";
+            if ($row['status'] == 'pending') {
+                $details[$i]['status'] = "Pending for Approval";
+            } else if ($row['status'] == 'allowed') {
+                $details[$i]['status'] = "Confirmed";
+            } else {
+                $details[$i]['status'] = "Rejected";
+            }
+            $i++;
+        }
+    }
+    return $details;
+}
+
+function getLeaveReport($data, $emp_id, $user_type) {
+    $details = array();
+    $i = 0;
+    if ($user_type == 'admin') {
+        $query = "SELECT * FROM leave_requests where leave_from >= '". $data['from_date']." 00:00:00' AND leave_to <= '".$data['to_date']." 23:59:59'";
+    } else {
+         $query = "SELECT * FROM leave_requests where leave_from >= '". $data['from_date']." 00:00:00' AND leave_to <= '".$data['to_date']." 23:59:59' AND emp_id = '".$emp_id."'";
+    }  
+    $result = mysqli_query($GLOBALS['conn'], $query);
+    
+    if ($result->num_rows) {
+        while ($row = mysqli_fetch_assoc($result)) {
+
+            $details[$i]['emp_id'] = $row['emp_id'];
+            $details[$i]['id'] = $row['id'];
             $profile_info = getUsernamefromID($row['emp_id']);
             $details[$i]['full_name'] = $profile_info['full_name'];
             $details[$i]['username'] = $profile_info['username'];
@@ -273,6 +308,18 @@ function getAllNotifications() {
 function deleteNotification($id) {
     $date = date("Y-m-d");
     $query = "Update notifications set status = 'Remove', removed_date = '" . $date . "' where id = $id";
+    $result = mysqli_query($GLOBALS['conn'], $query);
+    return $result;
+}
+
+function updateRequestStatus($id, $action) {
+    if ($action == 'reject') {
+        $query = "Update leave_requests set status = 'rejected' where id = $id";
+    } else if ($action = 'approve') {
+        $query = "Update leave_requests set status = 'allowed' where id = $id";
+    } else {
+        return 0;
+    }
     $result = mysqli_query($GLOBALS['conn'], $query);
     return $result;
 }
