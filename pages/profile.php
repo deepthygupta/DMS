@@ -43,8 +43,10 @@ if ($_POST) {
         $result = updateUserProfile($_POST);
         if ($result) {
             $success_message = "Profile Updated SUccessfully";
+            header("Location: profile.php");
         } else {
             $error_msg = "Error on updating profile ";
+            header("Location: profile.php");
         }
     }
 }
@@ -96,7 +98,7 @@ if ($_POST) {
                                 <div class="box-body box-profile">
                                     <img class="profile-user-img img-responsive img-circle" src="../<?php echo $user_data['photo']; ?>">
 
-                                    <h3 class="profile-username text-center"><?php echo $user_data['first_name']." ". $user_data['last_name']; ?></h3>
+                                    <h3 class="profile-username text-center"><?php echo $user_data['first_name'] . " " . $user_data['last_name']; ?></h3>
 
                                     <p class="text-muted text-center"><?php echo $user_data['designation']; ?></p>
 
@@ -127,8 +129,6 @@ if ($_POST) {
 
                                 </ul>
                                 <div class="tab-content">
-
-
                                     <div class="active tab-pane"  id="settings">
                                         <?php if (isset($error_msg) && $error_msg != "") { ?>
                                             <div class="alert alert-warning alert-dismissible">
@@ -163,7 +163,22 @@ if ($_POST) {
                                                 <label  class="col-sm-2 control-label">Designation</label>
 
                                                 <div class="col-sm-10">
-                                                    <input type="text" class="form-control" name="designation" placeholder="Designation" tabindex="3" autocomplete="off" value="<?php echo $user_data['designation']; ?>">
+                                                    <select class="form-control" name="designation" tabindex="3">
+                                                        <?php if ($user_data['designation'] != '') { ?>
+                                                            <option value="<?php echo $user_data['designation']; ?>"><?php echo $user_data['designation']; ?></option>
+                                                        <?php } else { ?>
+                                                            <option value="">Select Designation</option>
+                                                        <?php } ?>
+                                                        <option value="Developer">Developer</option>
+                                                        <option value="UI Developer">UI Developer</option>
+                                                        <option value="Project Manager">Project Manager</option>
+                                                        <option value="Graphics Designer">Graphics Designer</option>
+                                                        <option value="Marketing Executive">Marketing Executive</option>
+                                                        <option value="General Manager">General Manager</option>
+                                                        <?php if ($user_type == 'admin') { ?>
+                                                            <option value="CEO">CEO</option>
+                                                        <?php } ?>
+                                                    </select>
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -234,44 +249,32 @@ if ($_POST) {
                                         </form>
                                     </div>
                                     <div class="tab-pane" id="activity">  
-                                        <!-- Post -->
-                                        <div class="post">                                           
-                                            <!-- /.user-block -->
+                                        <div class="post">        
                                             <div class="row margin-bottom">
                                                 <div class="col-sm-6">
-                                                    <?php if($user_data['resume'] != "resume/"){ ?>
-                                                    <img class="img-responsive" src="../<?php echo $user_data['resume']; ?>" alt="Photo">
-                                                    <?php }else{ ?>
-                                                    <img class="img-responsive" src="../resume/no_doc.jpg" alt="Photo">
+                                                     <label  class="col-sm-2 control-label">Resume</label>
+                                                    <?php if ($user_data['resume'] != "resume/") { ?>
+                                                        <img class="img-responsive" src="../<?php echo $user_data['resume']; ?>" alt="Photo">
+                                                    <?php } else { ?>
+                                                        <img class="img-responsive" src="../resume/no_doc.jpg" alt="Photo">
                                                     <?php } ?>
                                                 </div>
                                                 <div class="col-sm-6">
-                                                     <?php if($user_data['documents'] != "documents/"){ ?>
-                                                    <img class="img-responsive" src="../<?php echo $user_data['documents']; ?>" alt="Photo">
-                                                    <?php }else{ ?>
-                                                    <img class="img-responsive" src="../documents/no_doc.jpg" alt="Photo">
+                                                     <label  class="col-sm-2 control-label">Documents</label>
+                                                    <?php if ($user_data['documents'] != "documents/") { ?>
+                                                        <img class="img-responsive" src="../<?php echo $user_data['documents']; ?>" alt="Photo">
+                                                    <?php } else { ?>
+                                                        <img class="img-responsive" src="../documents/no_doc.jpg" alt="Photo">
                                                     <?php } ?>
-                                                   
                                                 </div>
-
                                             </div>
-                                            <!-- /.row -->
-
                                         </div>
-                                        <!-- /.post -->
                                     </div>    
-                                    <!-- /.tab-pane -->
                                 </div>
-                                <!-- /.tab-content -->
                             </div>
-                            <!-- /.nav-tabs-custom -->
                         </div>
-                        <!-- /.col -->
                     </div>
-                    <!-- /.row -->
-
                 </section>
-                <!-- /.content -->
             </div>        
 
             <!-- jQuery 3 -->

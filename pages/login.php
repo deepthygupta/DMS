@@ -11,10 +11,11 @@ if ($_POST) {
     } else if ($_POST['password'] == "") {
         $error_msg = "You must enter password";
     } else {
-        $login_id = checkUserLoginDetails($_POST);
-        if ($login_id) {
+        $login_data = checkUserLoginDetails($_POST);
+        if ($login_data) {
             $_SESSION['login_user'] = $_POST['username'];
-            $_SESSION['emp_id'] = $login_id;
+            $_SESSION['emp_id'] = $login_data['emp_id'];
+            $_SESSION['user_type'] = $login_data['user_type'];
             header("Location:index.php");
         } else {
             $error_msg = "Invalid Login Details";
@@ -54,7 +55,7 @@ if ($_POST) {
             <div class="login-box-body">
                 <p class="login-box-msg"><h3>Login</h3></p>
 
-                <?php if (isset($error_msg) && $error_msg !="") { ?>
+                <?php if (isset($error_msg) && $error_msg != "") { ?>
                     <div class="alert alert-warning alert-dismissible">
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> <?php echo $error_msg; ?>
                     </div>

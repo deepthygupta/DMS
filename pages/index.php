@@ -5,13 +5,12 @@ if ($_SESSION['login_user'] == '') {
     header("Location:login.php");
 }
 
+$user_type = $_SESSION['user_type'];
 require_once 'methods.php';
 require_once 'connect.php';
 
 $notifications = getAllNotifications();
 $count = count($notifications);
-
-
 ?>
 
 <!DOCTYPE html>
@@ -148,7 +147,7 @@ $count = count($notifications);
                                     <div class="chart tab-pane" id="sales-chart" style="position: relative; height: 300px;"></div>
                                 </div>
                             </div>
-                           
+
                             <div class="box box-primary">
                                 <div class="box-header">
                                     <i class="ion ion-clipboard"></i>
@@ -156,7 +155,7 @@ $count = count($notifications);
                                 </div>
                                 <div class="box-body">
                                     <ul class="todo-list">
-                                        <?php                                      
+                                        <?php
                                         for ($i = 0; $i < $count; $i++) {
                                             ?>
                                             <li>
@@ -168,10 +167,12 @@ $count = count($notifications);
                                             </li>
                                         <?php } ?>
                                     </ul>
-                                </div>                               
-                                <div class="box-footer clearfix no-border">
-                                    <a href="notifications.php"><button type="button" class="btn btn-default pull-right"><i class="fa fa-plus"></i> View More</button></a>
-                                </div>
+                                </div>   
+                                <?php if ($user_type == 'admin') { ?>
+                                    <div class="box-footer clearfix no-border">
+                                        <a href="notifications.php"><button type="button" class="btn btn-default pull-right"><i class="fa fa-plus"></i> View More</button></a>
+                                    </div>
+                                <?php } ?>
                             </div>
                         </section>
                         <!-- /.Left col -->
@@ -516,7 +517,6 @@ $count = count($notifications);
         <script src="../dist/js/adminlte.min.js"></script>
         <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
         <script src="../dist/js/pages/dashboard.js"></script>
-        <!-- AdminLTE for demo purposes -->
         <script src="../dist/js/demo.js"></script>
     </body>
 </html>

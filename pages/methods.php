@@ -1,15 +1,16 @@
 <?php
 
 function checkUserLoginDetails($data) {
-    $emp_id = 0;
-    $query = "Select emp_id from employees_list where username = '" . $data['username'] . "' AND password = '" . md5($data['password']) . "'";
+    $user_data = array();
+    $query = "Select emp_id, user_type from employees_list where username = '" . $data['username'] . "' AND password = '" . md5($data['password']) . "'";
     $result = mysqli_query($GLOBALS['conn'], $query);
     if ($result->num_rows) {
         while ($row = mysqli_fetch_assoc($result)) {
-            $emp_id = $row['emp_id'];
+            $user_data['emp_id'] = $row['emp_id'];
+            $user_data['user_type'] = $row['user_type'];
         }
     }
-    return $emp_id;
+    return $user_data;
 }
 
 function getUserProfileInfo($login_user) {
@@ -199,21 +200,32 @@ function getAllRequestedDate($fromdate, $todate) {
     return $date_arr;
 }
 
-function getLeaveRequestDetails() {
+function getLeaveRequestDetails($emp_id = '') {
     $details = array();
     $i = 0;
-    $query = "SELECT * FROM leave_requests";
+    if ($emp_id) {
+        $query = "SELECT * FROM leave_requests where emp_id = '" . $emp_id . "'";
+    } else {
+        $query = "SELECT * FROM leave_requests";
+    }
     $result = mysqli_query($GLOBALS['conn'], $query);
     if ($result->num_rows) {
         while ($row = mysqli_fetch_assoc($result)) {
+
             $details[$i]['emp_id'] = $row['emp_id'];
             $profile_info = getUsernamefromID($row['emp_id']);
             $details[$i]['full_name'] = $profile_info['full_name'];
             $details[$i]['username'] = $profile_info['username'];
             $details[$i]['reason'] = $row['reason'];
             $details[$i]['category'] = $row['leave_category'];
-            $details[$i]['leave_date'] = $row['leave_from'] . " to " . $row['leave_to'];
-            $details[$i]['status'] = $row['status'];
+            $details[$i]['leave_date'] = $row['leave_from'] . "(" . $row['from_type'] . ") to " . $row['leave_to'] . "(" . $row['to_type'] . ")";
+            if ($row['status'] == 'pending') {
+                $details[$i]['status'] = "Pending for Approval";
+            } else if ($row['status'] == 'allowed') {
+                $details[$i]['status'] = "Confirmed";
+            } else {
+                $details[$i]['status'] = "Rejected";
+            }
             $i++;
         }
     }
@@ -259,8 +271,8 @@ function getAllNotifications() {
 }
 
 function deleteNotification($id) {
-    $date  = date("Y-m-d");
-    $query = "Update notifications set status = 'Remove', removed_date = '".$date."' where id = $id";
+    $date = date("Y-m-d");
+    $query = "Update notifications set status = 'Remove', removed_date = '" . $date . "' where id = $id";
     $result = mysqli_query($GLOBALS['conn'], $query);
     return $result;
 }

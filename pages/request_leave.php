@@ -28,6 +28,8 @@ if ($_POST) {
         }
     }
 }
+$leave_details = getLeaveRequestDetails($_SESSION['emp_id']);
+$leave_count = count($leave_details);
 ?>
 
 <!DOCTYPE html>
@@ -74,12 +76,8 @@ if ($_POST) {
                 <!-- Main content -->
                 <section class="content">
                     <div class="row">
-
                         <div class="col-md-12">
                             <div class="box box-info">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">Request Leave</h3>
-                                </div> 
                                 <?php if (isset($error_msg) && $error_msg != "") { ?>
                                     <div class="alert alert-warning alert-dismissible">
                                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> <?php echo $error_msg; ?>
@@ -130,7 +128,7 @@ if ($_POST) {
                                         <div class="form-group" id="datepicker1_div">
                                             <label  class="col-sm-2 control-label">Ending On</label>
                                             <div class="col-sm-6">
-                                                <input type="text" name="end_date" id="datepicker1" class="form-control" required="" autocomplete="off" tabindex="7">  
+                                                <input type="text" name="end_date" id="datepicker1" class="form-control" autocomplete="off" tabindex="7">  
                                             </div>
                                             <div class="col-sm-4">
                                                 <input type="radio" id="to_full" name="to_type" checked="" value="F" tabindex="8">  Full Day
@@ -142,6 +140,51 @@ if ($_POST) {
                                         <button type="submit" class="btn btn-info pull-left" tabindex="10">Request</button>
                                     </div>
                                 </form>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <section class="content-header">
+                    <h1>
+                        Requested Leave Details
+                    </h1>                    
+                </section>
+
+                <section class="content">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="box">          
+                                <div class="box-body">
+                                    <table id="example1" class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>                                               
+                                                <th>Reason for Leave</th>
+                                                <th>Category</th>
+                                                <th>Leave Date</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            if ($leave_count) {
+                                                for ($i = 0; $i < $leave_count; $i++) {
+                                                    ?>
+                                                    <tr>                                                   
+                                                        <td><?php echo $leave_details[$i]['reason']; ?></td>
+                                                        <td><?php echo $leave_details[$i]['category']; ?></td>
+                                                        <td><?php echo $leave_details[$i]['leave_date']; ?></td>
+                                                        <td><?php echo $leave_details[$i]['status']; ?></td>        
+                                                    </tr>
+                                                    <?php
+                                                }
+                                            } else {
+                                                ?>
+                                                    <tr><td colspan="3" style="text-align: center;"><h3>No Requests Found</h3><td></tr>    
+                                            <?php } ?>
+                                        </tbody>          
+                                    </table>
+                                </div>                              
                             </div>
                         </div>
                     </div>
@@ -169,23 +212,16 @@ if ($_POST) {
         <!-- SlimScroll -->
         <script src="../bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
         <script>
-            $(function () {
-                $('input').iCheck({
-                    checkboxClass: 'icheckbox_square-blue',
-                    radioClass: 'iradio_square-blue',
-                    increaseArea: '20%' /* optional */
-                });
-            });
             $(document).ready(function () {
                 $('#datepicker_div').hide();
                 $('#datepicker1_div').hide();
 
                 $('#datepicker').datepicker({
                     autoclose: true
-                })
+                });
                 $('#datepicker1').datepicker({
                     autoclose: true
-                })
+                });
 
                 $("#single").click(function () {
                     $('#datepicker_div').show();
@@ -195,6 +231,7 @@ if ($_POST) {
                 $("#multiple").click(function () {
                     $('#datepicker_div').show();
                     $('#datepicker1_div').show();
+                    $("#datepicker1").attr("required", "true");
                     $('#label_div').text("Leave Starting From");
                 });
             });

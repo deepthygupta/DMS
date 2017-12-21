@@ -1,10 +1,10 @@
 <?php
-session_start();
 
 require_once 'methods.php';
 require_once 'connect.php';
 
 $login_user = $_SESSION['login_user'];
+$user_type = $_SESSION['user_type'];
 $user_details = getUserProfileInfo($login_user);
 ?>
 <header class="main-header">
@@ -35,7 +35,7 @@ $user_details = getUserProfileInfo($login_user);
                                 <li><!-- start message -->
                                     <a href="#">
                                         <div class="pull-left">
-                                            <img src="../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                                            <img src="../dist/img/user2-160x160.jpg" class="img-circle">
                                         </div>
                                         <h4>
                                             Support Team
@@ -218,18 +218,15 @@ $user_details = getUserProfileInfo($login_user);
                         </li>
                     </ul>
                 </li>
-                <!-- User Account: style can be found in dropdown.less -->
-
+               
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <img src="..<?php echo $user_details['photo']; ?>" class="user-image" alt="User Image">             
+                        <img src="../<?php echo $user_details['photo']; ?>" class="user-image">             
                     </a>
                     <ul class="dropdown-menu">
-                        <!-- User image -->
                         <li class="user-header">
-                            <img src="..<?php echo $user_details['photo']; ?>" class="img-circle" alt="User Image">                
+                            <img src="../<?php echo $user_details['photo']; ?>" class="img-circle">                
                         </li>             
-                        <!-- Menu Footer-->
                         <li class="user-footer">
                             <div class="pull-left">
                                 <a href="#" class="btn btn-default btn-flat">Profile</a>
@@ -239,10 +236,6 @@ $user_details = getUserProfileInfo($login_user);
                             </div>
                         </li>
                     </ul>
-                </li>
-                <!-- Control Sidebar Toggle Button -->
-                <li>
-                    <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
                 </li>
             </ul>
         </div>
@@ -255,7 +248,7 @@ $user_details = getUserProfileInfo($login_user);
         <!-- Sidebar user panel -->
         <div class="user-panel">
             <div class="pull-left image">              
-                <img src="..<?php echo $user_details['photo']; ?>" class="img-circle" alt="User Image">
+                <img src="../<?php echo $user_details['photo']; ?>" class="img-circle" alt="User Image">
             </div>
             <div class="pull-left info">
                 <p><?php echo $user_details['full_name']; ?></p>          
@@ -276,34 +269,35 @@ $user_details = getUserProfileInfo($login_user);
                 </a>
 
             </li>
-            <li>
-                <a href="employees.php">
-                    <i class="fa fa-th"></i> <span>Employees List</span>            
-                </a>
+            <?php if ($user_type == 'admin') { ?>
+                <li>
+                    <a href="employees.php">
+                        <i class="fa fa-th"></i> <span>Employees List</span>            
+                    </a>
 
-            </li>
+                </li>
+            <?php } if($user_type != "admin"){ ?>
+                
             <li>
                 <a href="request_leave.php">
                     <i class="fa fa-folder"></i> <span>Request Leave</span>            
                 </a>
 
             </li>
+             <?php } if ($user_type == 'admin') {  ?>
             <li>
                 <a href="leave_requests.php">
                     <i class="fa fa-laptop"></i> <span>Leave Details</span>            
                 </a>
-            </li>           
-            <li>
-                <a href="leave_requests.php">
-                    <i class="fa fa-laptop"></i> <span>Leave Details</span>            
-                </a>
-            </li>           
+            </li>   
+            <?php } if ($user_type == 'admin') {  ?>
+                    
             <li>
                 <a href="notifications.php">
                     <i class="fa fa-list"></i> <span>Notifications</span>            
                 </a>
-            </li>           
-            
+            </li>
+            <?php } ?>
             <li>
                 <a href="widgets.html">
                     <i class="fa fa-th"></i> <span>Widgets</span>
